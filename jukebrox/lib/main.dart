@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/start.dart';
+import 'package:jukebrox/pages/start.dart';
 
 void main() {
   runApp(JukebroxApp());
