@@ -11,7 +11,7 @@ class RootsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<RootContainer> roots = rootFolders.map((root) => RootContainer(root.name)).toList();
+    List<RootContainer> roots = rootFolders.map((root) => RootContainer(root)).toList();
     
     return Scaffold(
       appBar: AppBar(

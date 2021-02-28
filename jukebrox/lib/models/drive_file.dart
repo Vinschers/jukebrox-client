@@ -7,7 +7,7 @@ class DriveFile {
   final int size;
   final String contentLink;
 
-  String path;
+  List<dynamic> path;
 
   DriveFile({this.id, this.name, this.mimeType, this.createdAt, this.iconLink, this.size, this.contentLink, this.path});
 

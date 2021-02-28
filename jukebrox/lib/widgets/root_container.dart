@@ -1,12 +1,26 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
-class RootContainer extends StatelessWidget {
-  final String name;
+import 'package:jukebrox/backend/utils/tree_organizer.dart';
+import 'package:jukebrox/backend/utils/requester.dart';
+import 'package:jukebrox/backend/utils/filter.dart';
+import 'package:jukebrox/models/folder.dart';
 
-  RootContainer(this.name);
+import 'package:jukebrox/models/root_folder.dart';
+import 'package:jukebrox/models/drive_file.dart';
+import 'package:jukebrox/pages/explorer.dart';
+
+class RootContainer extends StatelessWidget {
+  final RootFolder rootFolder;
+
+  RootContainer(this.rootFolder);
 
   Future onClick(context) async {
-    //Navigator.push(context, MaterialPageRoute(builder: (context) => XXXXX()));
+    List<DriveFile> files = await buildDriveTree(this.rootFolder.id);
+    
+    Folder root = organizeTree(filterMusicsFromDrive(files), this.rootFolder.id);
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ExplorerScreen(folder: root)));
   }
 
   @override
@@ -30,7 +44,7 @@ class RootContainer extends StatelessWidget {
                   image: AssetImage('assets/images/google_drive_icon.png'),
                   width: 40,
                 ),
-                Text(this.name,
+                Text(this.rootFolder.name,
                     style: Theme.of(context)
                         .textTheme
                         .headline5
