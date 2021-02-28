@@ -7,7 +7,8 @@ final String baseUrl = 'http://192.168.0.12:5643';
 
 Future<List<RootFolder>> fetchRootFolders() async {
   await Future.delayed(Duration(seconds: 3));
-  List<RootFolder> list = [RootFolder(id: '1V5x0HWY7CONTXVDpYOZjBxLQfZIOLpWl', name: 'music')];
+  List<RootFolder> list = [RootFolder(id: '1V5x0HWY7CONTXVDpYOZjBxLQfZIOLpWl', name: 'music'),
+                           RootFolder(id: '1llaLHyc5YU0sjUY-4vebmc5-ymTrj7oj', name: 'weeb shit')];
   return list;
 }
 
