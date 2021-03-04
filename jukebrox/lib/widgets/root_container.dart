@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 
 import 'package:jukebrox/backend/utils/tree_organizer.dart';
@@ -10,53 +8,41 @@ import 'package:jukebrox/models/folder.dart';
 import 'package:jukebrox/models/root_folder.dart';
 import 'package:jukebrox/models/drive_file.dart';
 import 'package:jukebrox/pages/explorer.dart';
+import 'package:jukebrox/pages/loading.dart';
+import 'package:jukebrox/widgets/list_container.dart';
 
-class RootContainer extends StatelessWidget {
+class RootContainer extends ListContainer {
   final RootFolder rootFolder;
 
-  RootContainer(this.rootFolder);
+  RootContainer(this.rootFolder) : super(backgroundColor: Colors.red[50], padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+      icon: Image(image: AssetImage('assets/images/google_drive_icon.png'), width: 40), text: rootFolder.name, color: Colors.black);
 
-  Future onClick(context) async {
+  Future<Folder> fetchFilesFromDrive() async {
+    var stopwatch = Stopwatch()..start();
     List<DriveFile> files = await buildDriveTree(this.rootFolder.id);
-    
+    print('Files retrived in ${stopwatch.elapsed}');
+    stopwatch = Stopwatch()..start();
     Folder root = organizeTree(filterMusicsFromDrive(files), this.rootFolder.id);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => ExplorerScreen(folder: root)));
+    print('Folder tree built in ${stopwatch.elapsed}');
+    stopwatch.stop();
+    return root;
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.red[50],
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          child: Container(
-            constraints: BoxConstraints.expand(
-              height: Theme.of(context).textTheme.headline5.fontSize * 1.1 + 50.0,
-            ),
-            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-            alignment: Alignment.centerLeft,
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 10,
-              children: [
-                Image(
-                  image: AssetImage('assets/images/google_drive_icon.png'),
-                  width: 40,
-                ),
-                Text(this.rootFolder.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5
-                        .copyWith(color: Colors.black)),
-              ],
-            ),
-          ),
-          onTap: () {
-            onClick(context);
-          },
+  void onClick(context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => LoadingScreen(
+              future: fetchFilesFromDrive(),
+              callback: (dynamic) => ExplorerScreen(folder: dynamic as Folder)
+            )
         ),
-      ),
     );
+  }
+
+  @override
+  TextStyle getTextStyle(context) {
+    return Theme.of(context).textTheme.headline5;
   }
 }

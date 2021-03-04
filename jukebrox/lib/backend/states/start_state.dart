@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:jukebrox/pages/start.dart';
 import 'package:jukebrox/pages/loading.dart';
 import 'package:jukebrox/pages/roots.dart';
-import 'package:jukebrox/pages/error.dart';
 
 import 'package:jukebrox/backend/utils/requester.dart';
 
@@ -21,18 +20,9 @@ class StartScreenState extends State<StartScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return LoadingScreen(
       future: futureRootFolders,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return RootsScreen(snapshot.data);
-        } else if (snapshot.hasError) {
-          return ErrorScreen(snapshot.error);
-        }
-
-        // By default, show a loading spinner.
-        return LoadingScreen();
-      },
+      callback: (dynamic) => RootsScreen(dynamic as List<RootFolder>),
     );
   }
 }
